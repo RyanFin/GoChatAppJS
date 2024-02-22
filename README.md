@@ -1,11 +1,14 @@
 # GoChatAppJS
-## Backend
+
 Chat application using a Go backend and a ReactJS frontend.
 - [TutorialEdge Project](https://tutorialedge.net/projects/chat-system-in-go-and-react/)
 
+## Backend
+
 # Getting Started with Create React App
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+- This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+- [Components and Props](https://legacy.reactjs.org/docs/components-and-props.html#function-and-class-components)
 
 ## Available Scripts
 
