@@ -3,6 +3,7 @@ import "./App.css";
 import { connect, sendMsg } from "./index";
 import Header from "./components/Header";
 import ChatHistory from "./components/ChatHistory";
+import ChatInput from "./components/ChatInput";
 
 class App extends Component {
   // method constructor 
@@ -25,11 +26,14 @@ class App extends Component {
     });
   }
 
-  com
-
-  send() {
-    console.log("hello");
-    sendMsg("hello");
+  send(event) {
+    // 13 is the Enter key on the keyboard
+    if (event.keyCode === 13){
+      // send the value within the input box to the send msg func
+      sendMsg(event.target.value);
+      // clear the input box
+      event.target.value = "";
+    }
   }
 
   render() {
@@ -37,7 +41,8 @@ class App extends Component {
       <div className="App">
         <Header/>
         <ChatHistory chatHistory={this.state.chatHistory} />
-        <button onClick={this.send}>Hit</button>
+        {/* run the send function from an input box */}
+        <ChatInput send={this.send} />
       </div>
     );
   }
