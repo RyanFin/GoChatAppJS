@@ -2,59 +2,42 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 
-	"github.com/gorilla/websocket"
+	"RyanFin/GoChatAppJS/backend/pkg/websocket"
 )
 
-var upgrader = websocket.Upgrader{
-	ReadBufferSize:  1024,
-	WriteBufferSize: 1024,
-	CheckOrigin:     func(r *http.Request) bool { return true },
-}
-
-func reader(conn *websocket.Conn) {
-	for {
-
-		messageType, p, err := conn.ReadMessage()
-		if err != nil {
-			log.Println(err)
-			return
-		}
-
-		fmt.Println(string(p))
-
-		if err := conn.WriteMessage(messageType, p); err != nil {
-			log.Println(err)
-			return
-		}
-
-	}
-}
-
-func serveWs(w http.ResponseWriter, r *http.Request) {
+func serveWs(pool *websocket.Pool, w http.ResponseWriter, r *http.Request) {
 	fmt.Println(r.Host)
+	fmt.Println("Websocket Endpoint Hit")
 
-	ws, err := upgrader.Upgrade(w, r, nil)
+	conn, err := websocket.Upgrade(w, r)
 	if err != nil {
-		log.Println(err)
+		fmt.Fprintf(w, "%+V\n", err)
 	}
 
-	reader(ws)
+	client := &websocket.Client{
+		Conn: conn,
+		Pool: pool,
+	}
+
+	pool.Register <- client
+	client.Read()
 }
 
 func setupRoutes() {
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Println(w, "Simple Server")
-	})
+	// initialise a new connection pool
+	pool := websocket.NewPool()
+	// run the start func to begin listening for connections and interactions
+	go pool.Start()
 
-	// ws route
-	http.HandleFunc("/ws", serveWs)
+	http.HandleFunc("/ws", func(w http.ResponseWriter, r *http.Request) {
+		serveWs(pool, w, r)
+	})
 }
 
 func main() {
-	fmt.Println("Chat App v0.01")
+	fmt.Println("Distributed Chat App v0.01")
 	setupRoutes()
 	fmt.Println("Listening on port :8080...")
 	http.ListenAndServe(":8080", nil)
