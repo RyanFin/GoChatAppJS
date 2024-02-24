@@ -9,6 +9,7 @@ Chat application using a Go backend and a ReactJS frontend.
 
 - This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 - [Components and Props](https://legacy.reactjs.org/docs/components-and-props.html#function-and-class-components)
+- [HTML placeholder text for input fields](https://www.w3schools.com/tags/tryit.asp?filename=tryhtml5_input_placeholder)
 
 ## Available Scripts
 
